@@ -1,0 +1,11 @@
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\bin\Debug\WPF.MDI.dll
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\bin\Debug\WPF.MDI.pdb
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI.csprojResolveAssemblyReference.cache
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI_MarkupCompile.cache
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI_MarkupCompile.lref
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\Themes\Generic.baml
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI.g.resources
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI.csproj.CoreCompileInputs.cache
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI.dll
+C:\Users\makar\Desktop\мди\sourceCode\WPF.MDI\obj\Debug\WPF.MDI.pdb
