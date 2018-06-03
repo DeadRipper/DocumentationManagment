@@ -70,7 +70,7 @@ namespace Desktop
                     MessageBoxResult res = MessageBox.Show("Login successsful");
                     if (res == MessageBoxResult.OK)
                     {
-                        MainWindow window = new MainWindow();
+                        StartWindow window = new StartWindow();
                         window.Show();
                         this.Close();
                     }
@@ -84,6 +84,8 @@ namespace Desktop
                 }
             }
 
+        
+
         private void registration_Click(object sender, RoutedEventArgs e)
         {
             Registration window = new Registration();
@@ -91,4 +93,4 @@ namespace Desktop
             this.Close();
         }
     }
-    }
+}

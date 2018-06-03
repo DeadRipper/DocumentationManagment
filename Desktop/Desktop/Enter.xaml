@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop"
-        mc:Ignorable="d" Height="300" Width="300">
+        mc:Ignorable="d" Height="300" Width="300"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Label Content="Password" HorizontalAlignment="Left" Margin="107,106,0,0" VerticalAlignment="Top" Width="65"/>
         <Label Content="UserName" HorizontalAlignment="Left" Margin="107,36,0,0" VerticalAlignment="Top"/>

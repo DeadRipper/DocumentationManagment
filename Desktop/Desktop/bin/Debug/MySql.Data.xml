@@ -4,6 +4,16 @@
         <name>MySql.Data</name>
     </assembly>
     <members>
+        <member name="T:MySql.Data.MySqlClient.Authentication.CachingSha2AuthenticationPlugin">
+            <summary>
+            The implementation of the caching_sha2_password authentication plugin.
+            </summary>
+        </member>
+        <member name="T:MySql.Data.MySqlClient.Authentication.AuthStage">
+            <summary>
+            Defines the stage of the authentication.
+            </summary>
+        </member>
         <member name="M:MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.GetPlugin(System.String,MySql.Data.MySqlClient.NativeDriver,System.Byte[])">
             <summary>
             This is a factory method that is used only internally.  It creates an auth plugin based on the method type
@@ -1158,6 +1168,13 @@
             <param name="query">Query to validate</param>
             <returns>If it is necessary to add call statement</returns>
         </member>
+        <member name="M:MySql.Data.MySqlClient.MySqlCommand.Clone">
+            <summary>
+            Creates a clone of this MySqlCommand object.  CommandText, Connection, and Transaction properties
+            are included as well as the entire parameter list.
+            </summary>
+            <returns>The cloned MySqlCommand object</returns>
+        </member>
         <member name="T:MySql.Data.MySqlClient.Common.NamedPipeStream">
             <summary>
             Summary description for API.
@@ -1483,7 +1500,7 @@
         myConnection.Close();
         }
       </code>
-    </example>#if !NETCORE10
+    </example>#if !NETSTANDARD1_6
         </member>
         <member name="P:MySql.Data.MySqlClient.MySqlConnection.ConnectionString">
             <summary>
@@ -2330,7 +2347,7 @@
         </member>
         <member name="M:MySql.Data.MySqlClient.MySqlConnection.BeginTransactionAsync">
             <summary>
-            Async version of BeginTransaction
+            Initiates the asynchronous execution of a transaction.
             </summary>
             <returns>An object representing the new transaction.</returns>
         </member>
@@ -3148,6 +3165,26 @@
             <summary>
             Summary description for Field.
             </summary>
+        </member>
+        <member name="T:MySql.Data.MySqlClient.CustomInstaller">
+            <summary>
+            We are adding a custom installer class to our assembly so our installer
+            can make proper changes to the machine.config file.
+            </summary>
+        </member>
+        <member name="M:MySql.Data.MySqlClient.CustomInstaller.Install(System.Collections.IDictionary)">
+            <summary>
+            We override Install so we can add our assembly to the proper
+            machine.config files.
+            </summary>
+            <param name="stateSaver"></param>
+        </member>
+        <member name="M:MySql.Data.MySqlClient.CustomInstaller.Uninstall(System.Collections.IDictionary)">
+            <summary>
+            We override Uninstall so we can remove out assembly from the
+            machine.config files.
+            </summary>
+            <param name="savedState"></param>
         </member>
         <member name="T:MySql.Data.MySqlClient.MySqlCommandBuilder">
             <summary>
@@ -4402,26 +4439,6 @@
             Gets or sets the MySqlCommand executed when Update is called.
             </summary>
         </member>
-        <member name="T:MySql.Data.MySqlClient.CustomInstaller">
-            <summary>
-            We are adding a custom installer class to our assembly so our installer
-            can make proper changes to the machine.config file.
-            </summary>
-        </member>
-        <member name="M:MySql.Data.MySqlClient.CustomInstaller.Install(System.Collections.IDictionary)">
-            <summary>
-            We override Install so we can add our assembly to the proper
-            machine.config files.
-            </summary>
-            <param name="stateSaver"></param>
-        </member>
-        <member name="M:MySql.Data.MySqlClient.CustomInstaller.Uninstall(System.Collections.IDictionary)">
-            <summary>
-            We override Uninstall so we can remove out assembly from the
-            machine.config files.
-            </summary>
-            <param name="savedState"></param>
-        </member>
         <member name="M:MySql.Data.MySqlClient.MySqlClientPermission.Add(System.String,System.String,System.Data.KeyRestrictionBehavior)">
              <summary>
              Adds a new connection string with set of restricted keywords to the MySqlClientPermission object 
@@ -4841,7 +4858,7 @@
         </member>
         <member name="P:MySql.Data.MySqlClient.MySqlParameter.MySqlDbType">
             <summary>
-            Gets or sets the MySqlDbType of the parameter.
+            Gets or sets the <see cref="P:MySql.Data.MySqlClient.MySqlParameter.MySqlDbType"/> of the parameter.
             </summary>
         </member>
         <member name="P:MySql.Data.MySqlClient.MySqlParameter.Precision">
@@ -5463,7 +5480,7 @@
         </member>
         <member name="T:MySql.Data.MySqlClient.MySqlClientFactory">
             <summary>
-            DBProviderFactory implementation for MysqlClient.
+            Represents a set of methods for creating instances of the MySQL client implementation of the data source classes.
             </summary>
         </member>
         <member name="F:MySql.Data.MySqlClient.MySqlClientFactory.Instance">
@@ -5571,7 +5588,7 @@
         </member>
         <member name="P:MySql.Data.MySqlClient.MySqlConnectionStringBuilder.Password">
             <summary>
-            Gets or sets the password that should be used to connect with.
+            Gets or sets the password that should be used to make a connection.
             </summary>
         </member>
         <member name="P:MySql.Data.MySqlClient.MySqlConnectionStringBuilder.PersistSecurityInfo">
@@ -6000,7 +6017,8 @@
         </member>
         <member name="F:MySql.Data.MySqlClient.MySqlAuthenticationMode.Default">
             <summary>
-            If SSL is enabled or Unix sockets are being used, sets PLAIN as the authentication mechanism; otherwise, uses MYSQL41.
+            If SSL is enabled or Unix sockets are being used, sets PLAIN as the authentication mechanism;
+            otherwise, it tries to use MYSQL41 and then SHA256_MEMORY.
             </summary>
         </member>
         <member name="F:MySql.Data.MySqlClient.MySqlAuthenticationMode.PLAIN">
@@ -6016,6 +6034,33 @@
         <member name="F:MySql.Data.MySqlClient.MySqlAuthenticationMode.EXTERNAL">
             <summary>
             Authenticate using EXTERNAL.
+            </summary>
+        </member>
+        <member name="F:MySql.Data.MySqlClient.MySqlAuthenticationMode.SHA256_MEMORY">
+            <summary>
+            Authenticate using SHA256_MEMORY.
+            </summary>
+        </member>
+        <member name="T:MySql.Data.MySqlClient.LockContention">
+            <summary>
+            Defines waiting options that may be used with row locking options.
+            </summary>
+        </member>
+        <member name="F:MySql.Data.MySqlClient.LockContention.Default">
+            <summary>
+            Waits until the blocking transaction releases the row lock.
+            </summary>
+        </member>
+        <member name="F:MySql.Data.MySqlClient.LockContention.NoWait">
+            <summary>
+            Never waits to acquire a row lock. The query executes immediately, 
+            failing with an error if a requested row is locked.
+            </summary>
+        </member>
+        <member name="F:MySql.Data.MySqlClient.LockContention.SkipLocked">
+            <summary>
+            Never waits to acquire a row lock. The query executes immediately, 
+            removing locked rows from the result set.
             </summary>
         </member>
         <member name="T:MySql.Data.MySqlClient.MySqlError">
@@ -8334,7 +8379,7 @@
         </member>
         <member name="F:MySql.Data.MySqlClient.MySqlErrorCode.CannotChangeTransactionIsolation">
             <summary></summary>
-            <remarks>ER_CANT_CHANGE_TX_ISOLATION</remarks>
+            <remarks>ER_CANT_CHANGE_TRANSACTION_ISOLATION</remarks>
         </member>
         <member name="F:MySql.Data.MySqlClient.MySqlErrorCode.DuplicateEntryAutoIncrementCase">
             <summary></summary>
@@ -8760,7 +8805,7 @@
         </member>
         <member name="M:MySql.Data.MySqlClient.MySqlScript.ExecuteAsync">
             <summary>
-            Async version of Execute
+            Initiates the asynchronous execution of SQL statements.
             </summary>
             <returns>The number of statements executed as part of the script inside.</returns>
         </member>
@@ -10143,6 +10188,11 @@
               Looks up a localized string similar to Attempt to call stored function &apos;{0}&apos; without specifying a return parameter.
             </summary>
         </member>
+        <member name="P:MySql.Data.Resources.RSAPublicKeyRetrievalNotEnabled">
+            <summary>
+              Looks up a localized string similar to Retrieval of the RSA public key is not enabled for insecure connections..
+            </summary>
+        </member>
         <member name="P:MySql.Data.Resources.ServerTooOld">
             <summary>
               Looks up a localized string similar to Connector/Net no longer supports server versions prior to 5.0.
@@ -10419,14 +10469,14 @@
               Looks up a localized string similar to Appdata path is not defined..
             </summary>
         </member>
-        <member name="P:MySql.Data.ResourcesX.ErrorParsingConfigFile">
+        <member name="P:MySql.Data.ResourcesX.AuthenticationFailed">
             <summary>
-              Looks up a localized string similar to Error parsing configuration file &apos;{0}&apos;..
+              Looks up a localized string similar to Authentication failed using MYSQL41 and SHA256_MEMORY. Check the user name and password or try using a secure connection..
             </summary>
         </member>
         <member name="P:MySql.Data.ResourcesX.FunctionalityNotSupported">
             <summary>
-              Looks up a localized string similar to This functionality is only supported from server version {0} onwards..
+              Looks up a localized string similar to This functionality is only supported in MySQL {0} and higher..
             </summary>
         </member>
         <member name="P:MySql.Data.ResourcesX.InvalidCollationId">
@@ -10452,6 +10502,16 @@
         <member name="P:MySql.Data.ResourcesX.InvalidDecimalFormat">
             <summary>
               Looks up a localized string similar to Decimal (BCD) format is invalid..
+            </summary>
+        </member>
+        <member name="P:MySql.Data.ResourcesX.InvalidFieldType">
+            <summary>
+              Looks up a localized string similar to Field type with name &apos;{0}&apos; not found..
+            </summary>
+        </member>
+        <member name="P:MySql.Data.ResourcesX.InvalidIndexType">
+            <summary>
+              Looks up a localized string similar to Index type with name &apos;{0}&apos; not found..
             </summary>
         </member>
         <member name="P:MySql.Data.ResourcesX.InvalidNameIndex">
@@ -10487,6 +10547,11 @@
         <member name="P:MySql.Data.ResourcesX.KeywordNotSupported">
             <summary>
               Looks up a localized string similar to Keyword not supported..
+            </summary>
+        </member>
+        <member name="P:MySql.Data.ResourcesX.MandatoryFieldNotFound">
+            <summary>
+              Looks up a localized string similar to Field &apos;{0}&apos; is mandatory..
             </summary>
         </member>
         <member name="P:MySql.Data.ResourcesX.MoreThanOneDocumentId">
@@ -10574,6 +10639,11 @@
               Looks up a localized string similar to Unexpected end of packet found while reading data values.
             </summary>
         </member>
+        <member name="P:MySql.Data.ResourcesX.UnexpectedField">
+            <summary>
+              Looks up a localized string similar to Field name &apos;{0}&apos; is not allowed..
+            </summary>
+        </member>
         <member name="P:MySql.Data.ResourcesX.UnknownPlaceholder">
             <summary>
               Looks up a localized string similar to Unknown placeholder :{0}.
@@ -10591,11 +10661,12 @@
         </member>
         <member name="T:MySql.Data.Types.MySqlConversionException">
             <summary>
-            Summary description for MySqlConversionException.
+            An exception thrown by MySQL when a type conversion does not succeed.
             </summary>
         </member>
         <member name="M:MySql.Data.Types.MySqlConversionException.#ctor(System.String)">
-            <summary>Ctor</summary>
+            <summary>Initializes a new instance of the <see cref="T:MySql.Data.Types.MySqlConversionException"/> class with a specified error message. </summary>
+            <param name="msg">Message describing the error.</param>
         </member>
         <member name="T:MySql.Data.Types.MySqlDateTime">
             <summary>
@@ -10737,59 +10808,6 @@
             <param name="guid1">The first <see cref="T:System.Guid"/> to compare.</param>
             <param name="guid2">The second <see cref="T:System.Guid"/> to compare.</param>
             <returns>An integer that indicates the lexical relationship between the two comparands, similar to <see cref="M:System.String.Compare(System.String,System.String)"/></returns>
-        </member>
-        <member name="T:MySqlX.DataAccess.ViewAlgorithmEnum">
-            <summary>
-            Defines how the server processes the view.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewAlgorithmEnum.Undefined">
-            <summary>
-            The server chooses which algorithm to use.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewAlgorithmEnum.Merge">
-            <summary>
-            The text of a statement that refers to the view and the view definition are merged.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewAlgorithmEnum.TempTable">
-            <summary>
-            The view is retrieved into a temporary table.
-            </summary>
-        </member>
-        <member name="T:MySqlX.DataAccess.ViewSqlSecurityEnum">
-            <summary>
-            Defines the security context in which the view is going to be
-            executed, this means that VIEW can be executed with current user permissions or
-            with permissions of the users who defined the VIEW.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewSqlSecurityEnum.Invoker">
-            <summary>
-            The view is executed under the invoker context.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewSqlSecurityEnum.Definer">
-            <summary>
-            The view is executed under the definer context.
-            </summary>
-        </member>
-        <member name="T:MySqlX.DataAccess.ViewCheckOptionEnum">
-            <summary>
-            Limits the write operations done on a `VIEW`
-            (`INSERT`, `UPDATE`, `DELETE`) to rows in which the `WHERE` clause is `TRUE`.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewCheckOptionEnum.Local">
-            <summary>
-            The view WHERE clause is checked, but no underlying views are checked.
-            </summary>
-        </member>
-        <member name="F:MySqlX.DataAccess.ViewCheckOptionEnum.Cascaded">
-            <summary>
-            The view WHERE clause is checked, then checking recurses to underlying views.
-            </summary>
         </member>
         <member name="P:MySqlX.Failover.FailoverGroup.Hosts">
             <summary>
@@ -11053,6 +11071,9 @@
         <member name="M:MySqlX.Protocol.X.ExprUtil.BuildLiteralScalar(System.Int64)">
             Proto-buf helper to build a LITERAL Expr with a Scalar SINT (signed int) type (wrapped in Any).
         </member>
+        <member name="M:MySqlX.Protocol.X.ExprUtil.BuildLiteralScalar(System.UInt64)">
+            Proto-buf helper to build a LITERAL Expr with a Scalar UINT (unsigned int) type (wrapped in Any).
+        </member>
         <member name="M:MySqlX.Protocol.X.ExprUtil.BuildLiteralScalar(System.String)">
             Proto-buf helper to build a LITERAL Expr with a Scalar STRING type (wrapped in Any).
         </member>
@@ -11305,6 +11326,31 @@
             Closes this session.
             </summary>
         </member>
+        <member name="M:MySqlX.XDevAPI.BaseSession.SetSavepoint">
+            <summary>
+            Sets a transaction savepoint with an autogenerated name.
+            </summary>
+            <returns>The autogenerated name of the transaction savepoint.</returns>
+        </member>
+        <member name="M:MySqlX.XDevAPI.BaseSession.SetSavepoint(System.String)">
+            <summary>
+            Sets a named transaction savepoint.
+            </summary>
+            <param name="name">The name of the transaction savepoint.</param>
+            <returns>The name of the transaction savepoint.</returns>
+        </member>
+        <member name="M:MySqlX.XDevAPI.BaseSession.ReleaseSavepoint(System.String)">
+            <summary>
+            Removes the named savepoint from the set of savepoints within the current transaction.
+            </summary>
+            <param name="name">The name of the transaction savepoint.</param>
+        </member>
+        <member name="M:MySqlX.XDevAPI.BaseSession.RollbackTo(System.String)">
+            <summary>
+            Rolls back a transaction to the named savepoint without terminating the transaction.
+            </summary>
+            <param name="name">The name of the transaction savepoint.</param>
+        </member>
         <member name="M:MySqlX.XDevAPI.BaseSession.ParseConnectionString(System.String)">
             <summary>
             Parses the connection string.
@@ -11511,15 +11557,59 @@
             <returns>A <see cref="T:MySqlX.XDevAPI.CRUD.FindStatement"/> object set with the given condition.</returns>
             <remarks>The statement can then be further modified before execution.</remarks>
         </member>
-        <member name="M:MySqlX.XDevAPI.Collection.CreateIndex(System.String,System.Boolean)">
+        <member name="M:MySqlX.XDevAPI.Collection.CreateIndex(System.String,System.Object)">
             <summary>
             Creates a <see cref="T:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement"/> with the given parameters which can be used to create
             an index.
             </summary>
             <param name="indexName">The index name.</param>
-            <param name="isUnique">True if the index is unique, false otherwise.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement"/> object set with the given index name and the isUnique flag.</returns>
-            <remarks>The statement can then be further modified before execution.</remarks>
+            <param name="indexDefinition">JSON document describing the index to be created.</param>
+            <returns>A <see cref="T:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement"/> object set with the given index definition.</returns>
+            <remarks>
+            <para><see cref="T:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement"/>:</para>
+            <para>The statement be further modified before execution.</para>
+            <para>&#160;</para>
+            <para><paramref name="indexDefinition"/> is a JSON document with the following fields:</para>
+            <para>
+            <para />- <c>fields</c>: array of <c>IndexField</c> objects, each describing a single document member to be
+            included in the index (see below).
+            <para />- <c>type: string</c>, (optional) the type of index. One of INDEX or SPATIAL. Default is INDEX and may
+            be omitted.
+            </para>
+            <para>&#160;</para>
+            <para>A single <c>IndexField</c> description consists of the following fields:</para>
+            <para>
+            <para />- <c>field</c>: string, the full document path to the document member or field to be indexed.
+            <para />- <c>type</c>: string, one of the supported SQL column types to map the field into (see the following list).
+            For numeric types, the optional UNSIGNED keyword may follow. For the TEXT type, the length to consider for
+            indexing may be added.
+            <para />- <c>required</c>: bool, (optional) true if the field is required to exist in the document. defaults to
+            false, except for GEOJSON where it defaults to true.
+            <para />- <c>options</c>: int, (optional) special option flags for use when decoding GEOJSON data.
+            <para />- <c>srid</c>: int, (optional) srid value for use when decoding GEOJSON data.
+            </para>
+            <para>&#160;</para>
+            <para>Supported SQL column types:</para>
+            <para>
+            <para />- INT [UNSIGNED]
+            <para />- TINYINT [UNSIGNED]
+            <para />- SMALLINT [UNSIGNED]
+            <para />- MEDIUMINT [UNSIGNED]
+            <para />- INTEGER [UNSIGNED]
+            <para />- BIGINT [UNSIGNED]
+            <para />- REAL [UNSIGNED]
+            <para />- FLOAT [UNSIGNED]
+            <para />- DOUBLE [UNSIGNED]
+            <para />- DECIMAL [UNSIGNED]
+            <para />- NUMERIC [UNSIGNED]
+            <para />- DATE
+            <para />- TIME
+            <para />- TIMESTAMP
+            <para />- DATETIME
+            <para />- TEXT[(length)]
+            <para />- GEOJSON (extra options: options, srid)
+            </para>
+            </remarks>
         </member>
         <member name="M:MySqlX.XDevAPI.Collection.DropIndex(System.String)">
             <summary>
@@ -11808,14 +11898,7 @@
             Gets the last inserted identifier (if there is one) by the statement that generated this result.
             </summary>
         </member>
-        <member name="P:MySqlX.XDevAPI.Common.Result.DocumentId">
-            <summary>
-            Gets the generated identifier of the document.
-            For multiple document identifiers use DocumentIds.
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">More than 1 document identifier was generated.</exception>
-        </member>
-        <member name="P:MySqlX.XDevAPI.Common.Result.DocumentIds">
+        <member name="P:MySqlX.XDevAPI.Common.Result.GeneratedIds">
             <summary>
             Gets the list of generated identifiers in the order of the Add() calls.
             </summary>
@@ -11837,78 +11920,6 @@
             <summary>
             Gets the database target.
             </summary>
-        </member>
-        <member name="T:MySqlX.XDevAPI.Common.ViewAlterStatement">
-            <summary>
-            Represents a chaining view alter statement.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewAlterStatement.Execute">
-            <summary>
-            Executes the view alter statement.
-            </summary>
-            <returns>Result of execution</returns>
-        </member>
-        <member name="T:MySqlX.XDevAPI.Common.ViewCreateStatement">
-            <summary>
-            Represents a chaining view create statement.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.Columns(System.String[])">
-            <summary>
-            Defines the column names (alias) for the view.
-            </summary>
-            <param name="columns">The alias list for the view columns.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given columns.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.Algorithm(MySqlX.DataAccess.ViewAlgorithmEnum)">
-            <summary>
-            Defines the algorithm of the view.
-            </summary>
-            <param name="algorithm">The algorithm of the view.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given algorithm.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.Security(MySqlX.DataAccess.ViewSqlSecurityEnum)">
-            <summary>
-            Defines the security scheme of the view.
-            </summary>
-            <param name="sqlSecurity">The security scheme of the view.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given security option.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.Definer(System.String)">
-            <summary>
-            Represents the definer for a view.
-            </summary>
-            <param name="user">The definer user.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given definer user.</returns>
-            <remarks>
-            <para>Users should take note on the following behavior:</para>
-            <para>- schema.CreateView("v").Definer("CURRENT_USER").Execute() ...</para>
-            <para>is equivalent to executing the statement:</para>
-            <para>- CREATE definer="CURRENT_USER" VIEW v ...</para>
-            <para>which, due to the way user names work in the server, is itself equivalent to:</para>
-            <para>- CREATE definer='CURRENT_USER'@'%' VIEW v ...</para>
-            </remarks>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.DefinedAs(MySqlX.XDevAPI.Relational.TableSelectStatement)">
-            <summary>
-            Defines the table Select statement used to generate the view.
-            </summary>
-            <param name="selectFunction">The table select statement.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given select statement.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.WithCheckOption(MySqlX.DataAccess.ViewCheckOptionEnum)">
-            <summary>
-            Sets insert and update constraints on the view.
-            </summary>
-            <param name="checkOption">The check option.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given check option.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Common.ViewCreateStatement.Execute">
-            <summary>
-            Executes the view create statement.
-            </summary>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.Result"/> object set with the results of the execution.</returns>
         </member>
         <member name="T:MySqlX.XDevAPI.Common.WarningInfo">
             <summary>
@@ -11937,213 +11948,6 @@
             <param name="code">The code for the warning.</param>
             <param name="msg">The error message for the warning.</param>
         </member>
-        <member name="T:MySqlX.XDevAPI.Config.IPersistenceHandler">
-            <summary>
-            Provides support for session configuration data persistence.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.IPersistenceHandler.Save(System.String,MySqlX.XDevAPI.DbDoc)">
-            <summary>
-            Saves the specified session configuration.
-            </summary>
-            <param name="name">The name used to identify the session configuration.</param>
-            <param name="config">The document that holds the session configuration.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object </returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.IPersistenceHandler.Load(System.String)">
-            <summary>
-            Retrieves a document representing the session configuration data for a given name.
-            </summary>
-            <param name="name">The name associated to the session configuration.</param>
-            <returns>The <see cref="T:MySqlX.XDevAPI.DbDoc"/> object matching the provided <paramref name="name"/>.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.IPersistenceHandler.Delete(System.String)">
-            <summary>
-            Deletes the specified session configuration.
-            </summary>
-            <param name="name">The name of the session configuration.</param>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.IPersistenceHandler.List">
-            <summary>
-            Retrives the name list of stored session configurations.
-            </summary>
-            <returns>A string list with the names of stored session configurations.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.IPersistenceHandler.Exists(System.String)">
-            <summary>
-            Validates the existence of a specific session configuration.
-            </summary>
-            <param name="name">The name of the session configuration.</param>
-            <returns>True if the session configuration exists, false otherwise.</returns>
-        </member>
-        <member name="T:MySqlX.XDevAPI.Config.SessionConfig">
-            <summary>
-            Represents information associated to a session.
-            </summary>
-        </member>
-        <member name="P:MySqlX.XDevAPI.Config.SessionConfig.Name">
-            <summary>
-            Gets or sets the name associated to this session configuration.
-            </summary>
-        </member>
-        <member name="P:MySqlX.XDevAPI.Config.SessionConfig.Uri">
-            <summary>
-            Gets or sets the Uri associated to this session configuration.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfig.SetAppData(System.String,System.String)">
-            <summary>
-            Adds a new entry to the session configuration data dictionary.
-            </summary>
-            <param name="key">The key name.</param>
-            <param name="value">The value associated to the provided key.</param>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfig.DeleteAppData(System.String)">
-            <summary>
-            Deletes the session configuration data entry matching the <paramref name="key"/> parameter.
-            </summary>
-            <param name="key">The key to delete.</param>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfig.GetAppData(System.String)">
-            <summary>
-            Gets the session configuration data that matches de provided key.
-            </summary>
-            <param name="key">The key name.</param>
-            <returns>The string value that matches the provided key.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfig.Save">
-            <summary>
-            Saves this object.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfig.ToJsonString">
-            <summary>
-            Retrieves the session configuration data associated to this object.
-            </summary>
-            <returns>A Json representation of the session configuration data for this object.</returns>
-        </member>
-        <member name="T:MySqlX.XDevAPI.Config.SessionConfigManager">
-            <summary>
-            Represents the user interface used to store/retrieve session configuration data.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,System.String,System.String)">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="uri">The session configuration uri.</param>
-            <param name="jsonAppData">The session configuation data in json format.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="uri">The session configuration uri.</param>
-            <param name="appData">The session configuration data as a dictionary.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,MySqlX.XDevAPI.DbDoc)">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="json">The session configuration data as a <see cref="T:MySqlX.XDevAPI.DbDoc"/> object.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="json"/> is null.</exception>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,System.String)">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="json">The session configuration data as a json string.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="json"/> is null or whitespace.</exception>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,System.Object)">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="json">The session configuration data as a json object.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="json"/> is null.</exception>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <param name="data">The session configuration data as a dictionary.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object set with the saved configuration data.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="data"/> is null.</exception>
-            <exception cref="T:System.ArgumentException">Both 'uri' and 'host' were found in <paramref name="data"/> dictionary.</exception>
-            <exception cref="T:System.ArgumentNullException">'host' wasn't found in the <paramref name="data"/> dictionary.</exception>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Save(MySqlX.XDevAPI.Config.SessionConfig)">
-            <summary>
-            Saves the session configuration.
-            </summary>
-            <param name="cfg">The <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> object to save.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> set with the saved session configuration data.</returns>
-            <exception cref="T:System.ArgumentNullException"><paramref name="cfg"/> is null.</exception>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Get(System.String)">
-            <summary>
-            Gets a specific session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <returns>The <see cref="T:MySqlX.XDevAPI.Config.SessionConfig"/> that matches the provided session configuration name.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.Delete(System.String)">
-            <summary>
-            Deletes a specific session configuration.
-            </summary>
-            <param name="name">The session configuration name.</param>
-            <returns>True if the session configuration was deleted, false otherwise.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.List">
-            <summary>
-            Retrives the name list of stored session configurations.
-            </summary>
-            <returns>A string list with the names of stored session configurations.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.SetPersistenceHandler(MySqlX.XDevAPI.Config.IPersistenceHandler)">
-            <summary>
-            Sets the persistence handler.
-            </summary>
-            <param name="handler">The persistence handler.</param>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Config.SessionConfigManager.SetPasswordHandler(MySqlX.XDevAPI.IPasswordHandler)">
-            <summary>
-            Sets the password handler.
-            </summary>
-            <param name="handler">The password handler.</param>
-        </member>
-        <member name="T:MySqlX.XDevAPI.IPasswordHandler">
-            <summary>
-            Provides support for password persistence.
-            </summary>
-        </member>
-        <member name="M:MySqlX.XDevAPI.IPasswordHandler.Save(System.String,System.String,System.String)">
-            <summary>
-            Saves the password for a given key and service.
-            </summary>
-            <param name="key">The key name.</param>
-            <param name="service">The service name.</param>
-            <param name="password">The password to store.</param>
-        </member>
-        <member name="M:MySqlX.XDevAPI.IPasswordHandler.Load(System.String,System.String)">
-            <summary>
-            Retrieves the password associated to the given key and service.
-            </summary>
-            <param name="key">The key name.</param>
-            <param name="service">The service name.</param>
-            <returns>The password that matches the given key and service.</returns>
-        </member>
         <member name="T:MySqlX.XDevAPI.CRUD.AddStatement">
             <summary>
             Represents a chaining collection insert statement.
@@ -12167,15 +11971,6 @@
             <summary>
             Implementation class for CRUD statements with collections using an index.
             </summary> 
-        </member>
-        <member name="M:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement.Field(System.String,System.String,System.Boolean)">
-            <summary>
-            Adds a new field to this statement.
-            </summary>
-            <param name="docPath">The document path.</param>
-            <param name="type">The type associated to the field.</param>
-            <param name="notNull">Indicates if the field can store null values.</param>
-            <returns>This statement object set with the new field.</returns>
         </member>
         <member name="M:MySqlX.XDevAPI.CRUD.CreateCollectionIndexStatement.Execute">
             <summary>
@@ -12227,17 +12022,19 @@
             <param name="offset">Number of items to be skipped.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.CRUD.FindStatement"/> object set with the specified limit.</returns>
         </member>
-        <member name="M:MySqlX.XDevAPI.CRUD.FindStatement.LockShared">
+        <member name="M:MySqlX.XDevAPI.CRUD.FindStatement.LockShared(MySql.Data.MySqlClient.LockContention)">
             <summary>
             Locks matching rows against updates.
             </summary>
+            <param name="lockOption">Optional row <see cref="T:MySql.Data.MySqlClient.LockContention">lock option</see> to use.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.CRUD.FindStatement"/> object set with the lock shared option.</returns>
             <exception cref="T:MySql.Data.MySqlClient.MySqlException">The server version is lower than 8.0.3.</exception>
         </member>
-        <member name="M:MySqlX.XDevAPI.CRUD.FindStatement.LockExclusive">
+        <member name="M:MySqlX.XDevAPI.CRUD.FindStatement.LockExclusive(MySql.Data.MySqlClient.LockContention)">
             <summary>
             Locks matching rows so no other transaction can read or write to it.
             </summary>
+            <param name="lockOption">Optional row <see cref="T:MySql.Data.MySqlClient.LockContention">lock option</see> to use.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.CRUD.FindStatement"/> object set with the lock exclusive option.</returns>
             <exception cref="T:MySql.Data.MySqlClient.MySqlException">The server version is lower than 8.0.3.</exception>
         </member>
@@ -12268,6 +12065,16 @@
             </summary>
             <param name="docPath">The document path key.</param>
             <returns>This <see cref="T:MySqlX.XDevAPI.CRUD.ModifyStatement"/> object.</returns>
+        </member>
+        <member name="M:MySqlX.XDevAPI.CRUD.ModifyStatement.Patch(System.Object)">
+            <summary>
+            Creates a <see cref="T:MySqlX.XDevAPI.CRUD.ModifyStatement"/> object set with the changes to be applied to all matching documents.
+            </summary>
+            <param name="document">The JSON-formatted object describing the set of changes.</param>
+            <returns>A <see cref="T:MySqlX.XDevAPI.CRUD.ModifyStatement"/> object set with the changes described in <paramref name="document"/>.</returns>
+            <remarks><paramref name="document"/> can be a <see cref="T:MySqlX.XDevAPI.DbDoc"/> object, an anonymous object, or a JSON string.</remarks>
+            <exception cref="T:System.ArgumentNullException"><paramref name="document"/> is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="document"/> is <c>null</c> or white space.</exception>
         </member>
         <member name="M:MySqlX.XDevAPI.CRUD.ModifyStatement.Execute">
             <summary>
@@ -12326,7 +12133,6 @@
         <member name="P:MySqlX.XDevAPI.DbDoc.Item(System.String)">
             <summary>
             Gets the value of a document property.
-            NOTE: currently this is only supported one level deep.
             </summary>
             <param name="path">The key path for the property.</param>
             <returns></returns>
@@ -12761,17 +12567,19 @@
             <param name="offset">The number of items to be skipped.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.Relational.TableSelectStatement"/> object set with the specified limit.</returns>
         </member>
-        <member name="M:MySqlX.XDevAPI.Relational.TableSelectStatement.LockShared">
+        <member name="M:MySqlX.XDevAPI.Relational.TableSelectStatement.LockShared(MySql.Data.MySqlClient.LockContention)">
             <summary>
             Locks matching rows against updates.
             </summary>
+            <param name="lockOption">Optional row <see cref="T:MySql.Data.MySqlClient.LockContention">lock option</see> to use.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.Relational.TableSelectStatement"/> object set with lock shared option.</returns>
             <exception cref="T:MySql.Data.MySqlClient.MySqlException">The server version is lower than 8.0.3.</exception>
         </member>
-        <member name="M:MySqlX.XDevAPI.Relational.TableSelectStatement.LockExclusive">
+        <member name="M:MySqlX.XDevAPI.Relational.TableSelectStatement.LockExclusive(MySql.Data.MySqlClient.LockContention)">
             <summary>
             Locks matching rows so no other transaction can read or write to it.
             </summary>
+            <param name="lockOption">Optional row <see cref="T:MySql.Data.MySqlClient.LockContention">lock option</see> to use.</param>
             <returns>This same <see cref="T:MySqlX.XDevAPI.Relational.TableSelectStatement"/> object set with the lock exclusive option.</returns>
             <exception cref="T:MySql.Data.MySqlClient.MySqlException">The server version is lower than 8.0.3.</exception>
         </member>
@@ -12867,30 +12675,6 @@
             </summary>
             <returns>True if exists, false otherwise.</returns>
         </member>
-        <member name="M:MySqlX.XDevAPI.Schema.CreateView(System.String,System.Boolean)">
-            <summary>
-            Creates a <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> with the given parameters which can be used to create
-            a view. The statement can then be further modified before execution.
-            </summary>
-            <param name="name">The view name.</param>
-            <param name="replace">Specifies if an existing view is replaced or not.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewCreateStatement"/> chaining object set with the given name.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Schema.AlterView(System.String)">
-            <summary>
-            Creates a <see cref="T:MySqlX.XDevAPI.Common.ViewAlterStatement"/> with the given name which can be used to alter
-            an existing view. The statement can then be further modified before execution.
-            </summary>
-            <param name="name">The view name.</param>
-            <returns>A <see cref="T:MySqlX.XDevAPI.Common.ViewAlterStatement"/> chaining object set with the given name.</returns>
-        </member>
-        <member name="M:MySqlX.XDevAPI.Schema.DropView(System.String)">
-            <summary>
-            Drops a view.
-            </summary>
-            <param name="name">The view name.</param>
-            <exception cref="T:System.ArgumentNullException"><paramref name="name"/> is null.</exception>
-        </member>
         <member name="T:MySqlX.XDevAPI.Session">
             <summary>
             Represents a single server session.
@@ -12962,6 +12746,11 @@
         <member name="F:Mysqlx.Ok.MsgFieldNumber">
             <summary>Field number for the "msg" field.</summary>
         </member>
+        <member name="P:Mysqlx.Ok.Msg">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="T:Mysqlx.Error">
              <summary>
               generic Error message
@@ -12982,14 +12771,34 @@
         <member name="F:Mysqlx.Error.SeverityFieldNumber">
             <summary>Field number for the "severity" field.</summary>
         </member>
+        <member name="P:Mysqlx.Error.Severity">
+            <summary>
+            optional [ default = ERROR ]
+            </summary>
+        </member>
         <member name="F:Mysqlx.Error.CodeFieldNumber">
             <summary>Field number for the "code" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Error.Code">
+            <summary>
+            required
+            </summary>
         </member>
         <member name="F:Mysqlx.Error.SqlStateFieldNumber">
             <summary>Field number for the "sql_state" field.</summary>
         </member>
+        <member name="P:Mysqlx.Error.SqlState">
+            <summary>
+            required
+            </summary>
+        </member>
         <member name="F:Mysqlx.Error.MsgFieldNumber">
             <summary>Field number for the "msg" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Error.Msg">
+            <summary>
+            required
+            </summary>
         </member>
         <member name="T:Mysqlx.Error.Types">
             <summary>Container for nested types declared in the Error message type.</summary>
@@ -13074,237 +12883,288 @@
         </member>
         <member name="T:Mysqlx.Crud.DataModel">
             <summary>
-             DataModel to use for filters, names, ...
+            DataModel to use for filters, names, ...
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.ViewAlgorithm">
             <summary>
-             ViewAlgorithm defines how MySQL Server processes the view
+            ViewAlgorithm defines how MySQL Server processes the view
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ViewAlgorithm.Undefined">
             <summary>
-             MySQL chooses which algorithm to use
+            MySQL chooses which algorithm to use
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ViewAlgorithm.Merge">
             <summary>
-             the text of a statement that refers to the view and the view definition are merged
+            the text of a statement that refers to the view and the view definition are merged
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ViewAlgorithm.Temptable">
             <summary>
-             the view are retrieved into a temporary table
+            the view are retrieved into a temporary table
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.ViewSqlSecurity">
             <summary>
-             ViewSqlSecurity defines the security context in which the view is going to be
-             executed, this means that VIEW can be executed with current user permissions or
-             with permissions of the uses who defined the VIEW
+            ViewSqlSecurity defines the security context in which the view is going to be
+            executed, this means that VIEW can be executed with current user permissions or
+            with permissions of the uses who defined the VIEW
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.ViewCheckOption">
             <summary>
-             ViewCheckOption limits the write operations done on a `VIEW`
-             (`INSERT`, `UPDATE`, `DELETE`) to rows in which the `WHERE` clause is `TRUE`
+            ViewCheckOption limits the write operations done on a `VIEW`
+            (`INSERT`, `UPDATE`, `DELETE`) to rows in which the `WHERE` clause is `TRUE`
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ViewCheckOption.Local">
             <summary>
-             the view WHERE clause is checked, but no underlying views are checked
+            the view WHERE clause is checked, but no underlying views are checked
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ViewCheckOption.Cascaded">
             <summary>
-             the view WHERE clause is checked, then checking recurses to underlying views
+            the view WHERE clause is checked, then checking recurses to underlying views
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.Column">
             <summary>
-             column definition
+            column definition
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Column.NameFieldNumber">
             <summary>Field number for the "name" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Column.Name">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.Column.AliasFieldNumber">
             <summary>Field number for the "alias" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Column.Alias">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Column.DocumentPathFieldNumber">
             <summary>Field number for the "document_path" field.</summary>
         </member>
         <member name="T:Mysqlx.Crud.Projection">
              <summary>
-              a projection
+             a projection
             
-              :param source: the expression identifying an element from the source data
-                             which can include a column identifier or any expression
-              :param alias: optional alias. Required for DOCUMENTs (clients may use 
-                           the source string as default)
+             :param source: the expression identifying an element from the source data
+                            which can include a column identifier or any expression
+             :param alias: optional alias. Required for DOCUMENTs (clients may use 
+                          the source string as default)
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Projection.SourceFieldNumber">
             <summary>Field number for the "source" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Projection.Source">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Projection.AliasFieldNumber">
             <summary>Field number for the "alias" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Projection.Alias">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="T:Mysqlx.Crud.Collection">
             <summary>
-             collection
+            collection
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Collection.NameFieldNumber">
             <summary>Field number for the "name" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Collection.Name">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Collection.SchemaFieldNumber">
             <summary>Field number for the "schema" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Collection.Schema">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="T:Mysqlx.Crud.Limit">
              <summary>
-              limit
+             limit
             
-              :param row_count: maximum rows to filter
-              :param offset: maximum rows to skip before applying the row_count
+             :param row_count: maximum rows to filter
+             :param offset: maximum rows to skip before applying the row_count
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Limit.RowCountFieldNumber">
             <summary>Field number for the "row_count" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Limit.RowCount">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Limit.OffsetFieldNumber">
             <summary>Field number for the "offset" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Limit.Offset">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="T:Mysqlx.Crud.Order">
             <summary>
-             sort order
+            sort order
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Order.ExprFieldNumber">
             <summary>Field number for the "expr" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Order.Expr">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Order.DirectionFieldNumber">
             <summary>Field number for the "direction" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Order.Direction">
+             <summary>
+            optional//[ default=ASC ]
+             </summary>
         </member>
         <member name="T:Mysqlx.Crud.Order.Types">
             <summary>Container for nested types declared in the Order message type.</summary>
         </member>
         <member name="T:Mysqlx.Crud.UpdateOperation">
              <summary>
-              update operations
+             update operations
             
-              :param source: specification of the value to be updated
-                   if data_model is TABLE, a column name may be specified and also a document path, if the column has type JSON
-                   if data_model is DOCUMENT, only document paths are allowed
-                   in both cases, schema and table must be not set
-              :param operation: the type of operation to be performed
-              :param value: an expression to be computed as the new value for the operation
+             :param source: specification of the value to be updated
+                  if data_model is TABLE, a column name may be specified and also a document path, if the column has type JSON
+                  if data_model is DOCUMENT, only document paths are allowed
+                  in both cases, schema and table must be not set
+             :param operation: the type of operation to be performed
+             :param value: an expression to be computed as the new value for the operation
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.SourceFieldNumber">
             <summary>Field number for the "source" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.UpdateOperation.Source">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.OperationFieldNumber">
             <summary>Field number for the "operation" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.UpdateOperation.Operation">
+             <summary>
+            required
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.ValueFieldNumber">
             <summary>Field number for the "value" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.UpdateOperation.Value">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="T:Mysqlx.Crud.UpdateOperation.Types">
             <summary>Container for nested types declared in the UpdateOperation message type.</summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.Set">
             <summary>
-             only allowed for TABLE
+            only allowed for TABLE
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ItemRemove">
             <summary>
-             no value (removes the identified path from a object or array)
+            no value (removes the identified path from a object or array)
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ItemSet">
             <summary>
-             sets the new value on the identified path
+            sets the new value on the identified path
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ItemReplace">
             <summary>
-             replaces a value if the path exists
+            replaces a value if the path exists
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ItemMerge">
             <summary>
-             source and value must be documents
+            source and value must be documents
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ArrayInsert">
             <summary>
-             insert the value in the array at the index identified in the source path
+            insert the value in the array at the index identified in the source path
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.ArrayAppend">
             <summary>
-             append the value on the array at the identified path
+            append the value on the array at the identified path
+            </summary>
+        </member>
+        <member name="F:Mysqlx.Crud.UpdateOperation.Types.UpdateType.MergePatch">
+            <summary>
+            merge JSON object value with the provided patch expression
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.Find">
              <summary>
-              Find Documents/Rows in a Collection/Table
+             Find Documents/Rows in a Collection/Table
             
-              .. uml::
+             .. uml::
             
-                client -> server: Find
-                ... one or more Resultset ...
+               client -> server: Find
+               ... one or more Resultset ...
             
-              :param collection: collection to insert into
-              :param data_model: datamodel that the operations refer to
-              :param projection: list of column projections that shall be returned
-              :param args: values for parameters used in filter expression
-              :param criteria: filter criteria
-              :param limit: numbers of rows that shall be skipped and returned
-              :param order: sort-order in which the rows/document shall be returned in
-              :param grouping: column expression list for aggregation (GROUP BY)
-              :param grouping_criteria: filter criteria for aggregated groups
-              :param locking: perform row locking on matches
-              :Returns: :protobuf:msg:`Mysqlx.Resultset::`
+             :param collection: collection to insert into
+             :param data_model: datamodel that the operations refer to
+             :param projection: list of column projections that shall be returned
+             :param args: values for parameters used in filter expression
+             :param criteria: filter criteria
+             :param limit: numbers of rows that shall be skipped and returned
+             :param order: sort-order in which the rows/document shall be returned in
+             :param grouping: column expression list for aggregation (GROUP BY)
+             :param grouping_criteria: filter criteria for aggregated groups
+             :param locking: perform row locking on matches
+             :param locking_options: additional options how to handle locked rows
+             :Returns: :protobuf:msg:`Mysqlx.Resultset::`
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Find.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.DataModelFieldNumber">
             <summary>Field number for the "data_model" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Find.DataModel">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.ProjectionFieldNumber">
             <summary>Field number for the "projection" field.</summary>
@@ -13312,11 +13172,21 @@
         <member name="F:Mysqlx.Crud.Find.CriteriaFieldNumber">
             <summary>Field number for the "criteria" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Find.Criteria">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.Find.ArgsFieldNumber">
             <summary>Field number for the "args" field.</summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.LimitFieldNumber">
             <summary>Field number for the "limit" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Find.Limit">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.OrderFieldNumber">
             <summary>Field number for the "order" field.</summary>
@@ -13327,45 +13197,78 @@
         <member name="F:Mysqlx.Crud.Find.GroupingCriteriaFieldNumber">
             <summary>Field number for the "grouping_criteria" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Find.GroupingCriteria">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.Find.LockingFieldNumber">
             <summary>Field number for the "locking" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Find.Locking">
+             <summary>
+            optional
+             </summary>
+        </member>
+        <member name="F:Mysqlx.Crud.Find.LockingOptionsFieldNumber">
+            <summary>Field number for the "locking_options" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Find.LockingOptions">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="T:Mysqlx.Crud.Find.Types">
             <summary>Container for nested types declared in the Find message type.</summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.Types.RowLock.SharedLock">
             <summary>
-             Lock matching rows against updates
+            Lock matching rows against updates
             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Find.Types.RowLock.ExclusiveLock">
             <summary>
-             Lock matching rows so no other transaction can read or write to it
+            Lock matching rows so no other transaction can read or write to it
+            </summary>
+        </member>
+        <member name="F:Mysqlx.Crud.Find.Types.RowLockOptions.Nowait">
+            <summary>
+            Do not wait to acquire row lock, fail with an error if a requested row is locked
+            </summary>
+        </member>
+        <member name="F:Mysqlx.Crud.Find.Types.RowLockOptions.SkipLocked">
+            <summary>
+            Do not wait to acquire a row lock, remove locked rows from the result set
             </summary>
         </member>
         <member name="T:Mysqlx.Crud.Insert">
              <summary>
-              Insert documents/rows into a collection/table
+             Insert documents/rows into a collection/table
             
-              :param collection: collection to insert into
-              :param data_model: datamodel that the operations refer to
-              :param projection: name of the columns to insert data into (empty if data_model is DOCUMENT)
-              :param row: set of rows to insert into the collection/table (a single expression with a JSON document literal or an OBJECT expression)
-              :param args: values for parameters used in row expressions
-              :param upsert: true if this should be treated as an Upsert (that is, update on duplicate key)
-              :Returns: :protobuf:msg:`Mysqlx.Resultset::`
+             :param collection: collection to insert into
+             :param data_model: datamodel that the operations refer to
+             :param projection: name of the columns to insert data into (empty if data_model is DOCUMENT)
+             :param row: set of rows to insert into the collection/table (a single expression with a JSON document literal or an OBJECT expression)
+             :param args: values for parameters used in row expressions
+             :param upsert: true if this should be treated as an Upsert (that is, update on duplicate key)
+             :Returns: :protobuf:msg:`Mysqlx.Resultset::`
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Insert.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Insert.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Insert.DataModelFieldNumber">
             <summary>Field number for the "data_model" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Insert.DataModel">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Insert.ProjectionFieldNumber">
             <summary>Field number for the "projection" field.</summary>
@@ -13379,6 +13282,11 @@
         <member name="F:Mysqlx.Crud.Insert.UpsertFieldNumber">
             <summary>Field number for the "upsert" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Insert.Upsert">
+             <summary>
+            optional//[default = false]
+             </summary>
+        </member>
         <member name="T:Mysqlx.Crud.Insert.Types">
             <summary>Container for nested types declared in the Insert message type.</summary>
         </member>
@@ -13387,37 +13295,52 @@
         </member>
         <member name="T:Mysqlx.Crud.Update">
              <summary>
-              Update documents/rows in a collection/table
+             Update documents/rows in a collection/table
             
-              :param collection: collection to change
-              :param data_model: datamodel that the operations refer to
-              :param criteria: filter expression to match rows that the operations will apply on
-              :param args: values for parameters used in filter expression
-              :param limit: limits the number of rows to match
-              :param order: specifies order of matched rows
-              :param operation: list of operations to be applied. Valid operations will depend on the data_model.
-              :Returns: :protobuf:msg:`Mysqlx.Resultset::`
+             :param collection: collection to change
+             :param data_model: datamodel that the operations refer to
+             :param criteria: filter expression to match rows that the operations will apply on
+             :param args: values for parameters used in filter expression
+             :param limit: limits the number of rows to match
+             :param order: specifies order of matched rows
+             :param operation: list of operations to be applied. Valid operations will depend on the data_model.
+             :Returns: :protobuf:msg:`Mysqlx.Resultset::`
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Update.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Update.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Update.DataModelFieldNumber">
             <summary>Field number for the "data_model" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Update.DataModel">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.Update.CriteriaFieldNumber">
             <summary>Field number for the "criteria" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Update.Criteria">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Update.ArgsFieldNumber">
             <summary>Field number for the "args" field.</summary>
         </member>
         <member name="F:Mysqlx.Crud.Update.LimitFieldNumber">
             <summary>Field number for the "limit" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Update.Limit">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Update.OrderFieldNumber">
             <summary>Field number for the "order" field.</summary>
@@ -13427,36 +13350,51 @@
         </member>
         <member name="T:Mysqlx.Crud.Delete">
              <summary>
-              Delete documents/rows from a Collection/Table
+             Delete documents/rows from a Collection/Table
             
-              :param collection: collection to change
-              :param data_model: datamodel that the operations refer to
-              :param criteria: filter expression to match rows that the operations will apply on
-              :param args: values for parameters used in filter expression
-              :param limit: limits the number of rows to match
-              :param order: specifies order of matched rows
-              :Returns: :protobuf:msg:`Mysqlx.Resultset::`
+             :param collection: collection to change
+             :param data_model: datamodel that the operations refer to
+             :param criteria: filter expression to match rows that the operations will apply on
+             :param args: values for parameters used in filter expression
+             :param limit: limits the number of rows to match
+             :param order: specifies order of matched rows
+             :Returns: :protobuf:msg:`Mysqlx.Resultset::`
              </summary>
         </member>
         <member name="F:Mysqlx.Crud.Delete.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.Delete.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Delete.DataModelFieldNumber">
             <summary>Field number for the "data_model" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.Delete.DataModel">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.Delete.CriteriaFieldNumber">
             <summary>Field number for the "criteria" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Delete.Criteria">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Delete.ArgsFieldNumber">
             <summary>Field number for the "args" field.</summary>
         </member>
         <member name="F:Mysqlx.Crud.Delete.LimitFieldNumber">
             <summary>Field number for the "limit" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.Delete.Limit">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.Delete.OrderFieldNumber">
             <summary>Field number for the "order" field.</summary>
@@ -13465,21 +13403,41 @@
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.CreateView.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.CreateView.DefinerFieldNumber">
             <summary>Field number for the "definer" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.CreateView.Definer">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.CreateView.AlgorithmFieldNumber">
             <summary>Field number for the "algorithm" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.CreateView.Algorithm">
+             <summary>
+            optional//[default = UNDEFINED]
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.CreateView.SecurityFieldNumber">
             <summary>Field number for the "security" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.CreateView.Security">
+             <summary>
+            optional//[default = DEFINER]
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.CreateView.CheckFieldNumber">
             <summary>Field number for the "check" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.CreateView.Check">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.CreateView.ColumnFieldNumber">
             <summary>Field number for the "column" field.</summary>
@@ -13488,32 +13446,57 @@
             <summary>Field number for the "stmt" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.CreateView.Stmt">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.CreateView.ReplaceExistingFieldNumber">
             <summary>Field number for the "replace_existing" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.CreateView.ReplaceExisting">
+             <summary>
+            optional//[default = false]
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ModifyView.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.ModifyView.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ModifyView.DefinerFieldNumber">
             <summary>Field number for the "definer" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.ModifyView.Definer">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.ModifyView.AlgorithmFieldNumber">
             <summary>Field number for the "algorithm" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.ModifyView.Algorithm">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ModifyView.SecurityFieldNumber">
             <summary>Field number for the "security" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.ModifyView.Security">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.ModifyView.CheckFieldNumber">
             <summary>Field number for the "check" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.ModifyView.Check">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.ModifyView.ColumnFieldNumber">
             <summary>Field number for the "column" field.</summary>
@@ -13521,42 +13504,32 @@
         <member name="F:Mysqlx.Crud.ModifyView.StmtFieldNumber">
             <summary>Field number for the "stmt" field.</summary>
         </member>
+        <member name="P:Mysqlx.Crud.ModifyView.Stmt">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Crud.DropView.CollectionFieldNumber">
             <summary>Field number for the "collection" field.</summary>
         </member>
         <member name="P:Mysqlx.Crud.DropView.Collection">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Crud.DropView.IfExistsFieldNumber">
             <summary>Field number for the "if_exists" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Crud.DropView.IfExists">
+             <summary>
+            optional//[ default = false ]
+             </summary>
         </member>
         <member name="T:Mysqlx.Datatypes.MysqlxDatatypesReflection">
             <summary>Holder for reflection information generated from mysqlx_datatypes.proto</summary>
         </member>
         <member name="P:Mysqlx.Datatypes.MysqlxDatatypesReflection.Descriptor">
             <summary>File descriptor for mysqlx_datatypes.proto</summary>
-        </member>
-        <member name="T:Mysqlx.Datatypes.ContentType">
-             <summary>
-              a hint about the higher-level encoding of a BYTES field
-            
-              ====== ====== ===========
-              type   value  description
-              ====== ====== ===========
-              BYTES  0x0001 GEOMETRY (WKB encoding)
-              BYTES  0x0002 JSON (text encoding)
-              BYTES  0x0003 XML (text encoding)
-              ====== ====== ===========
-            
-              .. note::
-                this list isn't comprehensive. As guideline: the field's value is expected
-                to pass a validator check on client and server if this field is set.
-                If the server adds more internal datatypes that rely on BLOB storage
-                like image manipulation, seeking into complex types in BLOBs, ... more
-                types will be added.
-             </summary>
         </member>
         <member name="T:Mysqlx.Datatypes.Scalar">
             <summary>
@@ -13574,8 +13547,18 @@
         <member name="F:Mysqlx.Datatypes.Scalar.VSignedIntFieldNumber">
             <summary>Field number for the "v_signed_int" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VSignedInt">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Datatypes.Scalar.VUnsignedIntFieldNumber">
             <summary>Field number for the "v_unsigned_int" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VUnsignedInt">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Datatypes.Scalar.VOctetsFieldNumber">
             <summary>Field number for the "v_octets" field.</summary>
@@ -13588,14 +13571,37 @@
         <member name="F:Mysqlx.Datatypes.Scalar.VDoubleFieldNumber">
             <summary>Field number for the "v_double" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VDouble">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Datatypes.Scalar.VFloatFieldNumber">
             <summary>Field number for the "v_float" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VFloat">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Datatypes.Scalar.VBoolFieldNumber">
             <summary>Field number for the "v_bool" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VBool">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Datatypes.Scalar.VStringFieldNumber">
             <summary>Field number for the "v_string" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.VString">
+            <summary>
+            optional
+            </summary>
+        </member>
+        <member name="T:Mysqlx.Datatypes.Scalar.DefaultOneofOneofCase">
+            <summary>Enum of possible cases for the "default_oneof" oneof.</summary>
         </member>
         <member name="T:Mysqlx.Datatypes.Scalar.Types">
             <summary>Container for nested types declared in the Scalar message type.</summary>
@@ -13616,10 +13622,15 @@
         <member name="F:Mysqlx.Datatypes.Scalar.Types.String.CollationFieldNumber">
             <summary>Field number for the "collation" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.Types.String.Collation">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="T:Mysqlx.Datatypes.Scalar.Types.Octets">
             <summary>
              an opaque octet sequence, with an optional content_type
-             See ``Mysqlx.Resultset.ColumnMetadata`` for list of known values.
+             See ``Mysqlx.Resultset.ContentType_BYTES`` for list of known values.
             </summary>
         </member>
         <member name="F:Mysqlx.Datatypes.Scalar.Types.Octets.ValueFieldNumber">
@@ -13632,6 +13643,11 @@
         </member>
         <member name="F:Mysqlx.Datatypes.Scalar.Types.Octets.ContentTypeFieldNumber">
             <summary>Field number for the "content_type" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Datatypes.Scalar.Types.Octets.ContentType">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Datatypes.Object">
             <summary>
@@ -13684,11 +13700,26 @@
         <member name="F:Mysqlx.Datatypes.Any.ScalarFieldNumber">
             <summary>Field number for the "scalar" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Any.Scalar">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Datatypes.Any.ObjFieldNumber">
             <summary>Field number for the "obj" field.</summary>
         </member>
+        <member name="P:Mysqlx.Datatypes.Any.Obj">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Datatypes.Any.ArrayFieldNumber">
             <summary>Field number for the "array" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Datatypes.Any.Array">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Datatypes.Any.Types">
             <summary>Container for nested types declared in the Any message type.</summary>
@@ -13701,16 +13732,21 @@
         </member>
         <member name="T:Mysqlx.Expect.Open">
              <summary>
-              open an Expect block and set/unset the conditions that have to be fulfilled
+             open an Expect block and set/unset the conditions that have to be fulfilled
             
-              if any of the conditions fail, all enclosed messages will fail with
-              a Mysqlx.Error message.
+             if any of the conditions fail, all enclosed messages will fail with
+             a Mysqlx.Error message.
             
-              :returns: :protobuf:msg:`Mysqlx::Ok` on success, :protobuf:msg:`Mysqlx::Error` on error
+             :returns: :protobuf:msg:`Mysqlx::Ok` on success, :protobuf:msg:`Mysqlx::Error` on error
              </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.OpFieldNumber">
             <summary>Field number for the "op" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expect.Open.Op">
+             <summary>
+            [ default = EXPECT_CTX_COPY_PREV ];//optional
+             </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.CondFieldNumber">
             <summary>Field number for the "cond" field.</summary>
@@ -13720,52 +13756,77 @@
         </member>
         <member name="F:Mysqlx.Expect.Open.Types.CtxOperation.ExpectCtxCopyPrev">
             <summary>
-             copy the operations from the parent Expect-block
+            copy the operations from the parent Expect-block
             </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.Types.CtxOperation.ExpectCtxEmpty">
             <summary>
-             start with a empty set of operations
+            start with a empty set of operations
             </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.Types.Condition.ConditionKeyFieldNumber">
             <summary>Field number for the "condition_key" field.</summary>
         </member>
         <member name="P:Mysqlx.Expect.Open.Types.Condition.ConditionKey">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.Types.Condition.ConditionValueFieldNumber">
             <summary>Field number for the "condition_value" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expect.Open.Types.Condition.ConditionValue">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Expect.Open.Types.Condition.OpFieldNumber">
             <summary>Field number for the "op" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expect.Open.Types.Condition.Op">
+             <summary>
+            [ default = EXPECT_OP_SET ];//optional
+             </summary>
         </member>
         <member name="T:Mysqlx.Expect.Open.Types.Condition.Types">
             <summary>Container for nested types declared in the Condition message type.</summary>
         </member>
+        <member name="F:Mysqlx.Expect.Open.Types.Condition.Types.Key.ExpectNoError">
+            <summary>
+            Change error propagation behaviour
+            </summary>
+        </member>
+        <member name="F:Mysqlx.Expect.Open.Types.Condition.Types.Key.ExpectFieldExist">
+            <summary>
+            Check if X Protocol field exists
+            </summary>
+        </member>
+        <member name="F:Mysqlx.Expect.Open.Types.Condition.Types.Key.ExpectDocidGenerated">
+            <summary>
+            Check if X Protocol support document _id generation
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expect.Open.Types.Condition.Types.ConditionOperation.ExpectOpSet">
              <summary>
-              set the condition
+             set the condition
             
-              set, if not set
-              overwrite, if set
+             set, if not set
+             overwrite, if set
              </summary>
         </member>
         <member name="F:Mysqlx.Expect.Open.Types.Condition.Types.ConditionOperation.ExpectOpUnset">
             <summary>
-             unset the condition
+            unset the condition
             </summary>
         </member>
         <member name="T:Mysqlx.Expect.Close">
              <summary>
-              close a Expect block
+             close a Expect block
             
-              closing a Expect block restores the state of the previous Expect block
-              for the following messages
+             closing a Expect block restores the state of the previous Expect block
+             for the following messages
             
-              :returns: :protobuf:msg:`Mysqlx::Ok` on success, :protobuf:msg:`Mysqlx::Error` on error
+             :returns: :protobuf:msg:`Mysqlx::Ok` on success, :protobuf:msg:`Mysqlx::Error` on error
              </summary>
         </member>
         <member name="T:Mysqlx.Expr.MysqlxExprReflection">
@@ -13805,26 +13866,66 @@
         <member name="F:Mysqlx.Expr.Expr.IdentifierFieldNumber">
             <summary>Field number for the "identifier" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.Expr.Identifier">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.Expr.VariableFieldNumber">
             <summary>Field number for the "variable" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.Expr.Variable">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Expr.Expr.LiteralFieldNumber">
             <summary>Field number for the "literal" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.Expr.Literal">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.Expr.FunctionCallFieldNumber">
             <summary>Field number for the "function_call" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.Expr.FunctionCall">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Expr.Expr.OperatorFieldNumber">
             <summary>Field number for the "operator" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.Expr.Operator">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.Expr.PositionFieldNumber">
             <summary>Field number for the "position" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.Expr.Position">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Expr.Expr.ObjectFieldNumber">
             <summary>Field number for the "object" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.Expr.Object">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.Expr.ArrayFieldNumber">
             <summary>Field number for the "array" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.Expr.Array">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Expr.Expr.Types">
             <summary>Container for nested types declared in the Expr message type.</summary>
@@ -13849,6 +13950,11 @@
         <member name="F:Mysqlx.Expr.Identifier.SchemaNameFieldNumber">
             <summary>Field number for the "schema_name" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.Identifier.SchemaName">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="T:Mysqlx.Expr.DocumentPathItem">
              <summary>
               DocumentPathItem
@@ -13871,8 +13977,18 @@
         <member name="F:Mysqlx.Expr.DocumentPathItem.ValueFieldNumber">
             <summary>Field number for the "value" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.DocumentPathItem.Value">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.DocumentPathItem.IndexFieldNumber">
             <summary>Field number for the "index" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.DocumentPathItem.Index">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Expr.DocumentPathItem.Types">
             <summary>Container for nested types declared in the DocumentPathItem message type.</summary>
@@ -13927,11 +14043,26 @@
         <member name="F:Mysqlx.Expr.ColumnIdentifier.NameFieldNumber">
             <summary>Field number for the "name" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.ColumnIdentifier.Name">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.ColumnIdentifier.TableNameFieldNumber">
             <summary>Field number for the "table_name" field.</summary>
         </member>
+        <member name="P:Mysqlx.Expr.ColumnIdentifier.TableName">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Expr.ColumnIdentifier.SchemaNameFieldNumber">
             <summary>Field number for the "schema_name" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Expr.ColumnIdentifier.SchemaName">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Expr.FunctionCall">
              <summary>
@@ -14101,145 +14232,165 @@
         </member>
         <member name="T:Mysqlx.Notice.Frame">
              <summary>
-              Common Frame for all Notices
+             Common Frame for all Notices
             
-              ===================================================== =====
-              .type                                                 value
-              ===================================================== =====
-              :protobuf:msg:`Mysqlx.Notice::Warning`                1
-              :protobuf:msg:`Mysqlx.Notice::SessionVariableChanged` 2
-              :protobuf:msg:`Mysqlx.Notice::SessionStateChanged`    3
-              ===================================================== =====
+             ===================================================== =====
+             .type                                                 value
+             ===================================================== =====
+             :protobuf:msg:`Mysqlx.Notice::Warning`                1
+             :protobuf:msg:`Mysqlx.Notice::SessionVariableChanged` 2
+             :protobuf:msg:`Mysqlx.Notice::SessionStateChanged`    3
+             ===================================================== =====
             
-              :param type: the type of the payload
-              :param payload: the payload of the notification
-              :param scope: global or local notification
+             :param type: the type of the payload
+             :param payload: the payload of the notification
+             :param scope: global or local notification
              </summary>
         </member>
         <member name="F:Mysqlx.Notice.Frame.TypeFieldNumber">
             <summary>Field number for the "type" field.</summary>
         </member>
         <member name="P:Mysqlx.Notice.Frame.Type">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Notice.Frame.ScopeFieldNumber">
             <summary>Field number for the "scope" field.</summary>
         </member>
+        <member name="P:Mysqlx.Notice.Frame.Scope">
+             <summary>
+            [ default = GLOBAL ];//optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Notice.Frame.PayloadFieldNumber">
             <summary>Field number for the "payload" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Notice.Frame.Payload">
+             <summary>
+            optional
+             </summary>
         </member>
         <member name="T:Mysqlx.Notice.Frame.Types">
             <summary>Container for nested types declared in the Frame message type.</summary>
         </member>
         <member name="T:Mysqlx.Notice.Warning">
              <summary>
-              Server-side warnings and notes
+             Server-side warnings and notes
             
-              ``.scope`` == ``local``
-                ``.level``, ``.code`` and ``.msg`` map the content of
+             ``.scope`` == ``local``
+               ``.level``, ``.code`` and ``.msg`` map the content of
             
-                .. code-block:: sql
+               .. code-block:: sql
             
-                  SHOW WARNINGS
+                 SHOW WARNINGS
             
-              ``.scope`` == ``global``
-                (undefined) will be used for global, unstructured messages like:
+             ``.scope`` == ``global``
+               (undefined) will be used for global, unstructured messages like:
             
-                * server is shutting down
-                * a node disconnected from group
-                * schema or table dropped
+               * server is shutting down
+               * a node disconnected from group
+               * schema or table dropped
             
-              ========================================== =======================
-              :protobuf:msg:`Mysqlx.Notice::Frame` field value
-              ========================================== =======================
-              ``.type``                                  1
-              ``.scope``                                 ``local`` or ``global``
-              ========================================== =======================
+             ========================================== =======================
+             :protobuf:msg:`Mysqlx.Notice::Frame` field value
+             ========================================== =======================
+             ``.type``                                  1
+             ``.scope``                                 ``local`` or ``global``
+             ========================================== =======================
             
-              :param level: warning level: Note or Warning
-              :param code: warning code
-              :param msg: warning message
+             :param level: warning level: Note or Warning
+             :param code: warning code
+             :param msg: warning message
              </summary>
         </member>
         <member name="F:Mysqlx.Notice.Warning.LevelFieldNumber">
             <summary>Field number for the "level" field.</summary>
         </member>
+        <member name="P:Mysqlx.Notice.Warning.Level">
+             <summary>
+            [ default = WARNING ];//optional
+             </summary>
+        </member>
         <member name="F:Mysqlx.Notice.Warning.CodeFieldNumber">
             <summary>Field number for the "code" field.</summary>
         </member>
         <member name="P:Mysqlx.Notice.Warning.Code">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Notice.Warning.MsgFieldNumber">
             <summary>Field number for the "msg" field.</summary>
         </member>
         <member name="P:Mysqlx.Notice.Warning.Msg">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="T:Mysqlx.Notice.Warning.Types">
             <summary>Container for nested types declared in the Warning message type.</summary>
         </member>
         <member name="T:Mysqlx.Notice.SessionVariableChanged">
              <summary>
-              Notify clients about changes to the current session variables
+             Notify clients about changes to the current session variables
             
-              Every change to a variable that is accessable through:
+             Every change to a variable that is accessible through:
             
-              .. code-block:: sql
+             .. code-block:: sql
             
-                SHOW SESSION VARIABLES
+               SHOW SESSION VARIABLES
             
-              ========================================== =========
-              :protobuf:msg:`Mysqlx.Notice::Frame` field value
-              ========================================== =========
-              ``.type``                                  2
-              ``.scope``                                 ``local``
-              ========================================== =========
+             ========================================== =========
+             :protobuf:msg:`Mysqlx.Notice::Frame` field value
+             ========================================== =========
+             ``.type``                                  2
+             ``.scope``                                 ``local``
+             ========================================== =========
             
-              :param namespace: namespace that param belongs to
-              :param param: name of the variable
-              :param value: the changed value of param
+             :param namespace: namespace that param belongs to
+             :param param: name of the variable
+             :param value: the changed value of param
              </summary>
         </member>
         <member name="F:Mysqlx.Notice.SessionVariableChanged.ParamFieldNumber">
             <summary>Field number for the "param" field.</summary>
         </member>
         <member name="P:Mysqlx.Notice.SessionVariableChanged.Param">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Notice.SessionVariableChanged.ValueFieldNumber">
             <summary>Field number for the "value" field.</summary>
         </member>
+        <member name="P:Mysqlx.Notice.SessionVariableChanged.Value">
+             <summary>
+            optional
+             </summary>
+        </member>
         <member name="T:Mysqlx.Notice.SessionStateChanged">
              <summary>
-              Notify clients about changes to the internal session state
+             Notify clients about changes to the internal session state
             
-              ========================================== =========
-              :protobuf:msg:`Mysqlx.Notice::Frame` field value
-              ========================================== =========
-              ``.type``                                  3
-              ``.scope``                                 ``local``
-              ========================================== =========
+             ========================================== =========
+             :protobuf:msg:`Mysqlx.Notice::Frame` field value
+             ========================================== =========
+             ``.type``                                  3
+             ``.scope``                                 ``local``
+             ========================================== =========
             
-              :param param: parameter key
-              :param value: updated value
+             :param param: parameter key
+             :param value: updated value
              </summary>
         </member>
         <member name="F:Mysqlx.Notice.SessionStateChanged.ParamFieldNumber">
             <summary>Field number for the "param" field.</summary>
         </member>
         <member name="P:Mysqlx.Notice.SessionStateChanged.Param">
-            <summary>
+             <summary>
             required
-            </summary>
+             </summary>
         </member>
         <member name="F:Mysqlx.Notice.SessionStateChanged.ValueFieldNumber">
             <summary>Field number for the "value" field.</summary>
@@ -14247,9 +14398,9 @@
         <member name="T:Mysqlx.Notice.SessionStateChanged.Types">
             <summary>Container for nested types declared in the SessionStateChanged message type.</summary>
         </member>
-        <member name="F:Mysqlx.Notice.SessionStateChanged.Types.Parameter.ClientIdAssigned">
+        <member name="F:Mysqlx.Notice.SessionStateChanged.Types.Parameter.GeneratedDocumentIds">
             <summary>
-             .. more to be added
+            .. more to be added
             </summary>
         </member>
         <member name="T:Mysqlx.Resultset.MysqlxResultsetReflection">
@@ -14257,6 +14408,38 @@
         </member>
         <member name="P:Mysqlx.Resultset.MysqlxResultsetReflection.Descriptor">
             <summary>File descriptor for mysqlx_resultset.proto</summary>
+        </member>
+        <member name="T:Mysqlx.Resultset.ContentType_BYTES">
+             <summary>
+              a hint about the higher-level encoding of a BYTES field
+            
+              ====== ====== ===========
+              type   value  description
+              ====== ====== ===========
+              BYTES  0x0001 GEOMETRY (WKB encoding)
+              BYTES  0x0002 JSON (text encoding)
+              BYTES  0x0003 XML (text encoding)
+              ====== ====== ===========
+            
+              .. note::
+                this list isn't comprehensive. As guideline: the field's value is expected
+                to pass a validator check on client and server if this field is set.
+                If the server adds more internal datatypes that rely on BLOB storage
+                like image manipulation, seeking into complex types in BLOBs, ... more
+                types will be added.
+             </summary>
+        </member>
+        <member name="T:Mysqlx.Resultset.ContentType_DATETIME">
+             <summary>
+              a hint about the higher-level encoding of a DATETIME field
+            
+              ======   ====== ===========
+              type     value  description
+              ======== ====== ===========
+              DATE     0x0001 DATETIME contains only date part
+              DATETIME 0x0002 DATETIME contains both date and time parts
+              ======   ====== ===========
+             </summary>
         </member>
         <member name="T:Mysqlx.Resultset.FetchDoneMoreOutParams">
             <summary>
@@ -14279,7 +14462,7 @@
             
               .. note:: the encoding used for the different ``bytes`` fields in the meta data is externally
                 controlled.
-                .. seealso:: https://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
+                .. seealso:: https://dev.mysql.com/doc/refman/8.0/en/charset-connection.html
             
               .. note::
                 The server may not set the ``original_{table|name}`` fields if they are equal to the plain
@@ -14350,7 +14533,7 @@
                     LONGLONG SIGNED 20
                     =============== ==
             
-                    .. seealso:: definition of ``M`` in https://dev.mysql.com/doc/refman/5.5/en/numeric-type-overview.html
+                    .. seealso:: definition of ``M`` in https://dev.mysql.com/doc/refman/8.0/en/numeric-type-overview.html
             
                   ``value``
                     variable length encoded signed 64 integer
@@ -14376,7 +14559,7 @@
                     LONGLONG UNSIGNED 20
                     ================= ==
             
-                    .. seealso:: definition of ``M`` in https://dev.mysql.com/doc/refman/5.5/en/numeric-type-overview.html
+                    .. seealso:: definition of ``M`` in https://dev.mysql.com/doc/refman/8.0/en/numeric-type-overview.html
             
                   ``value``
                     variable length encoded unsigned 64 integer
@@ -14387,7 +14570,7 @@
                     maximum number of displayable binary digits
             
                     .. note:: valid range for M of the ``BIT`` type is 1 - 64
-                    .. seealso:: https://dev.mysql.com/doc/refman/5.5/en/numeric-type-overview.html
+                    .. seealso:: https://dev.mysql.com/doc/refman/8.0/en/numeric-type-overview.html
             
                   ``value``
                     variable length encoded unsigned 64 integer
@@ -14578,7 +14761,7 @@
                 default: 0
               :param content_type:
                 a hint about the higher-level encoding of a BYTES field, for more informations
-                please refer to Mysqlx.Datatypes.ContentType enum.
+                please refer to Mysqlx.Resultset.ContentType_BYTES enum.
              </summary>
         </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.TypeFieldNumber">
@@ -14592,35 +14775,90 @@
         <member name="F:Mysqlx.Resultset.ColumnMetaData.NameFieldNumber">
             <summary>Field number for the "name" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Name">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.OriginalNameFieldNumber">
             <summary>Field number for the "original_name" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.OriginalName">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.TableFieldNumber">
             <summary>Field number for the "table" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Table">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.OriginalTableFieldNumber">
             <summary>Field number for the "original_table" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.OriginalTable">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.SchemaFieldNumber">
             <summary>Field number for the "schema" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Schema">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.CatalogFieldNumber">
             <summary>Field number for the "catalog" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Catalog">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.CollationFieldNumber">
             <summary>Field number for the "collation" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Collation">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.FractionalDigitsFieldNumber">
             <summary>Field number for the "fractional_digits" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.FractionalDigits">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.LengthFieldNumber">
             <summary>Field number for the "length" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Length">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.FlagsFieldNumber">
             <summary>Field number for the "flags" field.</summary>
         </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.Flags">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Resultset.ColumnMetaData.ContentTypeFieldNumber">
             <summary>Field number for the "content_type" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Resultset.ColumnMetaData.ContentType">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Resultset.ColumnMetaData.Types">
             <summary>Container for nested types declared in the ColumnMetaData message type.</summary>
@@ -14667,8 +14905,18 @@
         <member name="F:Mysqlx.Session.AuthenticateStart.AuthDataFieldNumber">
             <summary>Field number for the "auth_data" field.</summary>
         </member>
+        <member name="P:Mysqlx.Session.AuthenticateStart.AuthData">
+            <summary>
+            optional
+            </summary>
+        </member>
         <member name="F:Mysqlx.Session.AuthenticateStart.InitialResponseFieldNumber">
             <summary>Field number for the "initial_response" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Session.AuthenticateStart.InitialResponse">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Session.AuthenticateContinue">
              <summary>
@@ -14696,6 +14944,11 @@
         </member>
         <member name="F:Mysqlx.Session.AuthenticateOk.AuthDataFieldNumber">
             <summary>Field number for the "auth_data" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Session.AuthenticateOk.AuthData">
+            <summary>
+            optional
+            </summary>
         </member>
         <member name="T:Mysqlx.Session.Reset">
              <summary>
@@ -14742,6 +14995,11 @@
         <member name="F:Mysqlx.Sql.StmtExecute.NamespaceFieldNumber">
             <summary>Field number for the "namespace" field.</summary>
         </member>
+        <member name="P:Mysqlx.Sql.StmtExecute.Namespace">
+            <summary>
+            optional [ default = "sql" ]
+            </summary>
+        </member>
         <member name="F:Mysqlx.Sql.StmtExecute.StmtFieldNumber">
             <summary>Field number for the "stmt" field.</summary>
         </member>
@@ -14755,6 +15013,11 @@
         </member>
         <member name="F:Mysqlx.Sql.StmtExecute.CompactMetadataFieldNumber">
             <summary>Field number for the "compact_metadata" field.</summary>
+        </member>
+        <member name="P:Mysqlx.Sql.StmtExecute.CompactMetadata">
+            <summary>
+            optional [ default = false ]
+            </summary>
         </member>
         <member name="T:Mysqlx.Sql.StmtExecuteOk">
             <summary>

@@ -121,6 +121,14 @@ namespace Desktop
 
         public void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            bool isTrue = false;
+            MySqlCommand cmd = new MySqlCommand();
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString =
+                "server = 127.0.0.1; user id = root; password = 1234; database = admindata; SslMode = none;";
+            cmd.Connection = conn;
+            conn.Open();
+            string sql = "select ... from webappdemo.admindata";
             //const string str = "abcdefghijklmnopqrstuvwxyz0123456789";
             //var builder = new StringBuilder();
 

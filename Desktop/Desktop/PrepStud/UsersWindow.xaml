@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="Desktop.UsersWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Height="450" Width="800">
+    <!--Grid-->
+    <Grid Margin="0,0,0,-1" HorizontalAlignment="Left" Width="1187" >
+        <Grid 
+                  VerticalAlignment="Top" 
+                  Height="310" Margin="0,0,-668,0">
+            <!--This starts the DataGrid XAML-->
+            <DataGrid Name="dataGridCustomers" 
+                      ItemsSource="{Binding LoadDataBinding}" 
+                      AutoGenerateColumns="False" 
+                      HorizontalAlignment="Left" 
+                      Margin="10,55,0,46" 
+                      Width="624" 
+                      CanUserResizeRows="False" 
+                      >
+                <!--Columns in the Data Grid-->
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=UserID}" 
+                                        Header="User #" 
+                                        Width="75" 
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=firstname}" 
+                                        Header="First" 
+                                        Width="100" 
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=middlename}" 
+                                        Header="Middle" 
+                                        Width="100" 
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=lastname}" 
+                                        Header="last" 
+                                        Width="100" 
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=email}" 
+                                        Header="Email" 
+                                        Width="150" 
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Path=phonenumber}" 
+                                        Header="Phone" 
+                                        Width="100" 
+                                        IsReadOnly="True" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <!--The Button XAML-->
+            <Button Content="Load Data Grid" 
+                    Name="btnLoadDataGrid"                    
+                    Height="25" 
+                    HorizontalAlignment="Left" 
+                    Margin="244,25,0,0" 
+                    VerticalAlignment="Top" 
+                    Width="100" Click="btnLoadDataGrid_Click" />
+        </Grid>
+    </Grid>
+</UserControl>
